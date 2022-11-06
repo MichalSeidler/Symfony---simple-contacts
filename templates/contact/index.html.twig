@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contacts{% endblock %}
+
+{% block body %}
+<div class="container-fluid mt-4">
+    <h1>Contacts</h1>
+
+    <div>
+        <a href="{{ path('contact_new')}}" class="btn btn-primary btn-sm">Add+</a>
+    </div>
+
+    <div {{ stimulus_controller('modal') }}>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Phone</th>
+                    <th>E-mail</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for contact in pagination %}
+                <tr>
+                    <td>{{ contact.id }}</td>
+                    <td>{{ contact.name }}</td>
+                    <td>{{ contact.surname }}</td>
+                    <td>{{ contact.phone }}</td>
+                    <td>{{ contact.email }}</td>
+                    <td>
+                        <a href="#" data-action="modal#openModal" data-modal-url-param="{{ path('contact_description', {'slug': contact.slug}) }}">Show description</a> | 
+                        <a href="{{ path('contact_edit', {'slug': contact.slug}) }}">edit</a> | 
+                        <a href="{{ path('contact_delete', {'slug': contact.slug}) }}" onclick="return confirm('Are u sure?')">delete</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="9">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
+        {{ include('_modal.html.twig') }}
+    </div>
+</div>
+
+{% endblock %}

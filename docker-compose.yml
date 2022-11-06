@@ -1,0 +1,34 @@
+version: '3'
+services:
+    apache:
+        container_name: symfony
+        build:
+            context: ./
+            dockerfile: ./.docker/Dockerfile
+        ports:
+            - 8080:80
+        links:
+            - mariadb
+        volumes:
+            - .:/var/www/html
+
+    mariadb:
+        image: mariadb
+        ports:
+            - 3306:3306
+        volumes:
+            - /var/lib/mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: test
+            MYSQL_DATABASE: test
+            MYSQL_USER: test
+            MYSQL_PASSWORD: test
+
+    phpmyadmin:
+        ports:
+            - 8081:80
+        image: phpmyadmin/phpmyadmin
+        links:
+            - mariadb
+        environment:
+            PMA_HOST: mariadb
